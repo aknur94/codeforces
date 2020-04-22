@@ -1,48 +1,35 @@
-package rounds.ecr85div2;
+package rounds.div3_634;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class B {
+public class D {
     private BufferedReader br;
     private StringTokenizer st;
     private PrintWriter out;
 
     public static void main(String[] args) {
-        new B().run();
+        new D().run();
     }
 
     private void solve() {
         int t = nextInt();
         for (int q = 0; q < t; q++) {
-            int n = nextInt();
-            int x = nextInt();
-            Long a[] = new Long[n];
-            long kazna = 0;
-            for (int i = 0; i < n; i++) {
-                a[i] = nextLong();
-                if (a[i]>x){
-                    kazna+=a[i]-x;
-                    a[i] = (long)x;
-                }
+            char[][] a= new char[9][9];
+            for (int i = 0; i < 9; i++) {
+                a[i] = next().toCharArray();
             }
-            Arrays.sort(a);
-            for (int i = a.length-1; i >=0 ; i--) {
-                if (a[i]<x) {
-                    long dif = x - a[i];
-                    if (dif>kazna) break;
-                    a[i] = (long)x;
-                    kazna-=dif;
-                }
+            int index = 0;
+            for (int i = 0; i < 9; i++) {
+                int x = (index*3)%9 + i/3;
+                a[i][x] = a[i][(x+1)%9];
+                index++;
             }
-            int res = 0;
-            for (int i = 0; i < n; i++) {
-                if (a[i]>=x) res++;
+            for (int i = 0; i < 9; i++) {
+                out.println(a[i]);
             }
-            System.out.println(res);
         }
     }
 

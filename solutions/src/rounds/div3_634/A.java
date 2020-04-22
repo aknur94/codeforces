@@ -1,48 +1,24 @@
-package rounds.ecr85div2;
+package rounds.div3_634;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class B {
+public class A {
     private BufferedReader br;
     private StringTokenizer st;
     private PrintWriter out;
 
     public static void main(String[] args) {
-        new B().run();
+        new A().run();
     }
 
     private void solve() {
         int t = nextInt();
         for (int q = 0; q < t; q++) {
-            int n = nextInt();
-            int x = nextInt();
-            Long a[] = new Long[n];
-            long kazna = 0;
-            for (int i = 0; i < n; i++) {
-                a[i] = nextLong();
-                if (a[i]>x){
-                    kazna+=a[i]-x;
-                    a[i] = (long)x;
-                }
-            }
-            Arrays.sort(a);
-            for (int i = a.length-1; i >=0 ; i--) {
-                if (a[i]<x) {
-                    long dif = x - a[i];
-                    if (dif>kazna) break;
-                    a[i] = (long)x;
-                    kazna-=dif;
-                }
-            }
-            int res = 0;
-            for (int i = 0; i < n; i++) {
-                if (a[i]>=x) res++;
-            }
-            System.out.println(res);
+            long n = nextLong();
+            out.println(n%2==0?(n/2)-1:n/2);
         }
     }
 

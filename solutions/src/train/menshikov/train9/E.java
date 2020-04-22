@@ -3,91 +3,85 @@ package train.menshikov.train9;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class E {
+
+    static int n;
+    static private int d[][] = {{-1, 0}, {0, -1}, {0, 1}, {1, 0}};
     private BufferedReader br;
     private StringTokenizer st;
     private PrintWriter out;
-    private int d[][] = {{-1, 0}, {0, -1}, {0, 1}, {1, 0}};
 
     public static void main(String[] args) {
         new E().run();
     }
 
     private void solve() {
-
-        int n = nextInt();
-
-        int a[][] = new int[n][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                a[i][j] = nextInt();
+        int[][] a = new int[202][202];
+        Pair[][][] pairs = new Pair[202][202][2];
+        for (int i = 0; i < 202; i++) {
+            for (int j = 0; j < 202; j++) {
+                pairs[i][j][0] = new Pair(0,0,0);
+                pairs[i][j][1] = new Pair(0,0,0);
             }
         }
-
-        int b[][] = new int[n][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (a[i][j] > 0) {
-                    b[i][j] = a[i][j];
-                } else {
-                    bfs(a, b, i, j);
+        n = nextInt();
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                a[i][j] = nextInt();
+                if (a[i][j]>0) {
+                    pairs[i][j][0].i = i;
+                    pairs[i][j][0].j = j;
                 }
             }
         }
-        for (int k = 0; k < a.length; k++) {
-            for (int l = 0; l < a.length; l++) {
-                out.print(b[k][l] + " ");
+        boolean changed = true;
+
+        int it = 0;
+        while(changed) {
+            changed=false;
+            it++;
+            for (int i = 1; i<=n; i++) {
+                for (int j = 1; j <= n; j++) {
+                    if (pairs[i][j][it%2].i > 0 && pairs[i][j][it%2].j >0) {
+                        pairs[i][j][Math.abs(it%2-1)].i = pairs[i][j][it%2].i;
+                        pairs[i][j][Math.abs(it%2-1)].j = pairs[i][j][it%2].j;
+                        continue;
+                    }
+                    Set<Pair> set = new HashSet<>();
+                    Pair pair = pairs[i][j][it%2];
+                    set.add(new Pair(0,0,1));
+                    for (int k = 0; k < 4; k++) {
+                        int x = i + d[k][0];
+                        int y = j + d[k][1];
+                        if (set.add(pairs[x][y][it%2])){
+                            pair = pairs[x][y][it%2];
+                        }
+                    }
+                    if (set.size()==2) {
+                        pairs[i][j][Math.abs(it%2-1)] = pair;
+                    } else if (set.size()==3) {
+                        pairs[i][j][Math.abs(it%2-1)] = new Pair(201, 201,0);
+                    }
+                }
+            }
+            for (int k = 0; k < 202; k++) {
+                for (int l = 0; l < 202; l++) {
+                    if (!pairs[k][l][0].equals(pairs[k][l][1])) {
+                        changed =true;
+                        break;
+                    }
+                }
+                if (changed) break;
+            }
+        }
+        for (int i = 1; i <=n ; i++) {
+            for (int j = 1; j <=n ; j++) {
+                out.print(a[pairs[i][j][0].i][pairs[i][j][0].j]+" ");
             }
             out.println();
         }
-    }
-
-    private void bfs(int[][] a, int[][] b, int i, int j) {
-        List<Pair> list = new ArrayList<>();
-        List<Integer> listR = new ArrayList<>();
-        list.add(new Pair(i, j, 0));
-        int index = 0;
-        int bigStep = 1;
-        boolean bool[][] = new boolean[a.length][a.length];
-        bool[i][j] = true;
-        while (index < list.size()) {
-            int step = list.get(index).step + 1;
-            if (bigStep != step) {
-                bigStep = step;
-                int res = 0;
-                int count = 0;
-                for (int p :
-                        listR) {
-                    if (p > 0) {
-                        count++;
-                        res = p;
-                    }
-                }
-                if (count > 1) {
-                    b[i][j] = 0;
-                    listR.clear();
-                    return;
-                } else if (count == 1) {
-                    b[i][j] = res;
-                    return;
-                }
-            }
-            for (int k = 0; k < 4; k++) {
-                int x = list.get(index).i + d[k][0];
-                int y = list.get(index).j + d[k][1];
-                if (x >= 0 && x < a.length && y >= 0 && y < a.length && !bool[x][y]) {
-                    list.add(new Pair(x, y, step));
-                    listR.add(a[x][y]);
-                    bool[x][y] = true;
-                }
-            }
-            index++;
-        }
-
     }
 
     private void run() {
@@ -120,7 +114,7 @@ public class E {
         return Double.parseDouble(next());
     }
 
-    class Pair {
+    static class Pair {
         int i;
         int j;
         int step;
@@ -129,6 +123,20 @@ public class E {
             this.i = i;
             this.j = j;
             this.step = step;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Pair pair = (Pair) o;
+            return i == pair.i &&
+                    j == pair.j;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(i, j);
         }
     }
 }

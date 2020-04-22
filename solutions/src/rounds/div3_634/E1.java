@@ -1,48 +1,45 @@
-package rounds.ecr85div2;
+package rounds.div3_634;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class B {
+public class E1 {
     private BufferedReader br;
     private StringTokenizer st;
     private PrintWriter out;
 
     public static void main(String[] args) {
-        new B().run();
+        new E1().run();
     }
 
     private void solve() {
         int t = nextInt();
         for (int q = 0; q < t; q++) {
             int n = nextInt();
-            int x = nextInt();
-            Long a[] = new Long[n];
-            long kazna = 0;
+            int a[] = new int[n];
             for (int i = 0; i < n; i++) {
-                a[i] = nextLong();
-                if (a[i]>x){
-                    kazna+=a[i]-x;
-                    a[i] = (long)x;
+                a[i] = nextInt();
+            }
+            int res = n;
+
+            for (int i = 0; i < n; i++) {
+                int aValue = a[i];
+                int aLen = 1;
+                int bValue = -1;
+                int bLen = -1;
+                for (int j = i+1; j < n; j++) {
+                    if(a[j]==a[i] && bValue ==-1) {
+                        aLen++;
+                    } else if (a[j]!=a[i] && bValue ==-1) {
+                        bValue = a[j];
+                        bLen = 1;
+                    } else if (a[j]!=a[i] && a[j] == bValue) {
+                        bLen++;
+                    }
                 }
             }
-            Arrays.sort(a);
-            for (int i = a.length-1; i >=0 ; i--) {
-                if (a[i]<x) {
-                    long dif = x - a[i];
-                    if (dif>kazna) break;
-                    a[i] = (long)x;
-                    kazna-=dif;
-                }
-            }
-            int res = 0;
-            for (int i = 0; i < n; i++) {
-                if (a[i]>=x) res++;
-            }
-            System.out.println(res);
         }
     }
 

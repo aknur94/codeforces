@@ -1,9 +1,8 @@
-package rounds.ecr85div2;
+package rounds.div2_635;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class B {
@@ -18,31 +17,18 @@ public class B {
     private void solve() {
         int t = nextInt();
         for (int q = 0; q < t; q++) {
-            int n = nextInt();
             int x = nextInt();
-            Long a[] = new Long[n];
-            long kazna = 0;
-            for (int i = 0; i < n; i++) {
-                a[i] = nextLong();
-                if (a[i]>x){
-                    kazna+=a[i]-x;
-                    a[i] = (long)x;
-                }
+            int n = nextInt();
+            int m = nextInt();
+            int an = x/2 + 10;
+            while(x > an && n > 0) {
+                x = an;
+                n--;
+                an = x/2 + 10;
             }
-            Arrays.sort(a);
-            for (int i = a.length-1; i >=0 ; i--) {
-                if (a[i]<x) {
-                    long dif = x - a[i];
-                    if (dif>kazna) break;
-                    a[i] = (long)x;
-                    kazna-=dif;
-                }
-            }
-            int res = 0;
-            for (int i = 0; i < n; i++) {
-                if (a[i]>=x) res++;
-            }
-            System.out.println(res);
+            x-= m*10;
+            if (x>0) {out.println("NO");}
+            else out.println("YES");
         }
     }
 
